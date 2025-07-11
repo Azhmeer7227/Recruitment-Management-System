@@ -1,0 +1,53 @@
+User Table
+===================
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
+  password VARCHAR(255),
+  role ENUM('candidate', 'recruiter') NOT NULL
+);
+
+=================== 
+Jobs Table 
+===================
+
+CREATE TABLE jobs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255),
+  description TEXT,
+  company VARCHAR(100)
+);
+
+===================
+Applications Table
+===================
+
+CREATE TABLE applications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  candidate_id INT NOT NULL,
+  job_id INT NOT NULL,
+  applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (candidate_id) REFERENCES users(id),
+  FOREIGN KEY (job_id) REFERENCES jobs(id)
+);
+
+CREATE TABLE job_applications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  job_id INT NOT NULL,
+  applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (job_id) REFERENCES jobs(id),
+  UNIQUE (user_id, job_id)  -- Ensure a user can apply only once for a particular job
+);
+
+
+ALTER TABLE users ADD COLUMN bio TEXT;
+ALTER TABLE users ADD COLUMN skills TEXT;
+ALTER TABLE users ADD COLUMN experience TEXT;
+ALTER TABLE jobs ADD COLUMN recruiter_id INT NOT NULL;
+ALTER TABLE jobs ADD FOREIGN KEY (recruiter_id) REFERENCES users(id);
+
+
